@@ -14,6 +14,7 @@
     sort_end: 1
   register: ec2_ami_find
   when: ec2_find_ami_name is defined
+  with_items: "{{ instances }}"
 
 - name: set fact ec2_base_image when ec2_find_ami_name is defined
   set_fact: ec2_base_image="{{ ec2_ami_find.results[0].ami_id }}"
@@ -37,6 +38,8 @@
     region: "{{ item.region }}"
     vpc_subnet_id: "{{ item.ec2_vpc_subnet_id }}"
     instance_tags: "{{ item.aws_resource_tags }}"
+    count_tags: "{{ item.aws_resource_tags }}"
+    exact_count: "{{ item.count | default(1) }}"
     state: "{{ item.state | default('present') }}"
     volumes: "{{ item.ec2_volumes | default(omit) }}"
   with_items: "{{ instances }}"
