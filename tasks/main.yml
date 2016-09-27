@@ -4,8 +4,10 @@
   when: ansible_version.major|int != 2 and ansible_version.minor|int < 0 and ansible_version.revision|int < 1
 
 - include: tasks/terminate.yml
-  when: state == "absent"
+  when: {{ item.state }} == "absent"
+  with_items: {{ instances }}
 
 - include: tasks/create.yml
-  when: state == "present"
+  when: {{ item.state }} == "present"
+  with_items: {{ instances }}
 
