@@ -47,8 +47,16 @@
   debug: var=ec2
 
 
-- name: Add new instance to host group
+- name: Add new instance to host group (private ip)
   add_host: hostname="{{ item.1.private_ip }}" groupname=ec2_launched ec2_id="{{ item.1.id }}"
+  when: item.1.public_ip is undefined
+  with_subelements:
+   - "{{ ec2.results }}"
+   - instances
+
+- name: Add new instance to host group (public ip)
+  add_host: hostname="{{ item.1.public_ip }}" groupname=ec2_launched_public_ip ec2_id="{{ item.1.id }}"
+  when: item.1.public_ip is defined
   with_subelements:
    - "{{ ec2.results }}"
    - instances
