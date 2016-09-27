@@ -19,9 +19,8 @@
   set_fact: ec2_base_image="{{ ec2_ami_find.results[0].ami_id }}"
   when: ec2_find_ami_name is defined
 
-- name: debug steps
-  debug: var=instances
-
+- name: debug instances definition
+  debug: var=instances verbosity=2
 
 - name: launch instances
   ec2:
