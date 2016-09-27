@@ -1,0 +1,47 @@
+---
+# define instances to deploy as a list of dicts within the dict 'instances'
+instances:
+  - name: dbserver
+    region: 'eu-west-1'
+    aws_resource_tags:
+      Name: dbserver
+      var: bla
+    ec2_sg_id: ['sg-85ssede2']
+    ec2_vpc_subnet_id: 'subnet-5e3ss63a'
+    ec2_vpc_id: 'vpc-48fb712c'
+    ec2_key_name: 'aairey-sshkey'
+    ec2_assign_public_ip: 'yes'
+    ec2_find_ami_name: "import-ami-fghsszbp"
+    ec2_instance_type: 't2.small'
+    # ec2_instance_profile_name: aws-elasticbeanstalk-ec2-role
+    ec2_base_image: 'ami-7a0f7ss9'
+    #ec2_user_data:|
+    #   docker run nginx
+    project_name: 'aws-automation'
+    build_version: '1'
+    ec2_volumes:
+      - device_name: '/dev/sda1'
+        volume_type: 'gp2'
+        volume_size: 200
+        delete_on_termination: true
+    state: 'present'
+   
+  - name: webserver
+    region: 'eu-west-1'
+    aws_resource_tags:
+      Name: webserver
+      var: bla
+    ec2_sg_id: ['sg-856ssde2']
+    ec2_vpc_subnet_id: 'subnet-5ss7463a'
+    ec2_vpc_id: 'vpc-48fsse2c'
+    ec2_key_name: 'aairey-sshkey'
+    ec2_assign_public_ip: 'yes'
+    ec2_find_ami_name: "import-ami-fghsssep"
+    ec2_instance_type: 't2.micro'
+    # ec2_instance_profile_name: aws-elasticbeanstalk-ec2-role
+    ec2_base_image: 'ami-7ssf7609'
+    #ec2_user_data:|
+    #   docker run nginx
+    project_name: 'aws-automation'
+    build_version: 1 
+    state: 'present'

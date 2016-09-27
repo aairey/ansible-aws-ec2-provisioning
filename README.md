@@ -51,32 +51,30 @@ Example Playbook (creation)
    
     - hosts: localhost
       vars:
-        aws_resource_tags: {
-         'Name': 'instance-name',
-         'VREnv': 'PROD',
-         'VRProject': 'infra-ansible',
-         'VRTeam': 'infra',
-         'zabbix-metadata': 'if-ansible-sample' }
-        region: us-east-1
-        ec2_sg_id: ['sg-32f1634b']
-        ec2_vpc_subnet_id: subnet-0959b37f
-        ec2_vpc_id: vpc-202e7845
-        ec2_key_name: master_virginia
-        ec2_assign_public_ip: yes
-        ec2_find_ami_name: "ubuntu-docker-base-ami-1*"
-        ec2_instance_type: t2.small
-        ec2_instance_profile_name: aws-elasticbeanstalk-ec2-role
-        ec2_base_image: ami-8fcee4e5
-        ec2_user_data:|
-            docker run nginx
-        vivareal_project_name: my-ami
-        vivareal_build_version: 1
-        vivareal_project_build: "{{ vivareal_project_name }}-{{ vivareal_build_version}}"
-        ec2_volumes:
-          - device_name: /dev/sda1
-            volume_type: gp2
-            volume_size: 200
-            delete_on_termination: true
+        instances:
+          aws_resource_tags:
+           Name: 'instance-name'
+           Env: 'PROD'
+           Project: 'infra-ansible'
+           Team: 'infra'
+           zabbix-metadata: 'if-ansible-sample' 
+          region: us-east-1
+          ec2_sg_id: ['sg-32f1634b']
+          ec2_vpc_subnet_id: subnet-0959b37f
+          ec2_vpc_id: vpc-202e7845
+          ec2_key_name: master_virginia
+          ec2_assign_public_ip: yes
+          ec2_find_ami_name: "ubuntu-docker-base-ami-1*"
+          ec2_instance_type: t2.small
+          ec2_instance_profile_name: aws-elasticbeanstalk-ec2-role
+          ec2_base_image: ami-8fcee4e5
+          ec2_user_data:|
+              docker run nginx
+          ec2_volumes:
+            - device_name: /dev/sda1
+              volume_type: gp2
+              volume_size: 200
+              delete_on_termination: true
       roles:
         - { role: aws-ec2-provisioning }
 
@@ -87,9 +85,10 @@ Example Playbook (termination)
 
     - hosts: localhost
       vars:
-        state: absent
-        region: eu-west-1
-        instance_ids: ['i-0eef911d60fe285cf' ]
+        instances
+          state: absent
+          region: eu-west-1
+          instance_ids: ['i-0eef91ss0fe285cf' ]
       roles:
         - { role: aws-ec2-provisioning } 
 
