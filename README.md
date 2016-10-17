@@ -85,6 +85,6 @@ BSD
 Contributors:
 ------------------
 
-Giancarlo Rubio (<gianrubio@gmail.com>)
-Andy Airey (<airey.andy@gmail.com>)
+* Giancarlo Rubio (<gianrubio@gmail.com>)
+* Andy Airey (<airey.andy@gmail.com>)
 
