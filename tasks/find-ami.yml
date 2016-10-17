@@ -1,0 +1,25 @@
+---
+# tasks file for finding amis and storing it in a dict 'amis'
+- name: Search for an AMI
+  ec2_ami_find:
+    ami_tags:
+      Name: "{{ item.ec2_find_ami_name }}"
+    owner: "{{ aws_owner | default('self') }}"
+    sort: name
+    region: "{{ item.ec2_region }}"
+    sort_order: descending
+    sort_end: 1
+    no_result_action: fail
+  register: ec2_ami_find
+  when: ec2_find_ami_name is defined and not ansible_check_mode
+  with_items: "{{ instances }}"
+
+- debug: var=ec2_ami_find.results verbosity=3
+
+- name: Create a dictionary of found AMI'ss
+  set_fact: 
+    amis: "{{ amis|default({}) | combine( {item.invocation.module_args.ami_tags.Name: item.results[0].ami_id} ) }}"
+  with_items: "{{ ec2_ami_find.results }}"
+
+- debug: msg="found AMI's" var=amis verbosity=2
+
