@@ -1,2 +1,3 @@
 ---
-# defaults file for aws-ec2-provisioning/
+# vars file for aws-ec2-provisioning/
+ACTION: 'provision'
