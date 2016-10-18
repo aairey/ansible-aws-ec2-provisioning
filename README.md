@@ -16,7 +16,7 @@ Role Variables
 | --------------------- | -------- | ------- | -------- |-------- |
 | ec2_find_ami_name                   |  yes     |         || ami name to find. Ex: ubuntu-docker-base-ami-1* |
 | ec2_assign_public_ip                   |   no    |    yes     |yes, no|  when provisioning within vpc, assign a public IP address. |
-| ec2_exact_count                   |  yes     |     1    || exact number of instances to launch/terminate based on tags defined in `ec2_count_tag`|
+| ec2_exact_count                   |  yes     |     1    || exact number of instances to launch/terminate based on tags defined in `ec2_count_tag` (0 will destroy the instances!)|
 | ec2_count_tag                   |  yes     |  `instance_tags`   1    || tags of instances to create/delete depending on `ec2_exact_count`|
 | ec2_sg_id                   |   yes    |         || security group id (or list of ids) to use with the instance |
 | ec2_instance_type                   |   no    |     t2.micro    || instance type to use for the instance, see http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-types.html|
@@ -29,8 +29,7 @@ Role Variables
 | ec2_user_data | no | | | opaque blob of data which is made available to the ec2 instance |
 | ec2_volumes    | no | | |a list of hash/dictionaries of volumes to add to the new instance; '[{"key":"value", "key":"value"}]'; keys allowed are - device_name (str; required), delete_on_termination (bool; False), device_type (deprecated), ephemeral (str), encrypted (bool; False), snapshot (str), volume_type (str), iops (int) - device_type is deprecated use volume_type, iops must be set when volume_type='io1', ephemeral and snapshot are mutually exclusive.  |
 | aws_resource_tags  | yes  |   | | a hash/dictionary of tags to add to the new instance or for starting/stopping instance by tag; '{"Key":"value"}' and '{"Environment":"production","Project":"infra-ansible","Team":"infra", "Name":"instance_name"}' |
-| region |  yes |   || The AWS region to use. Must be specified if ec2_url is not used. If not specified then the value of the EC2_REGION environment variable, if any, is used. See http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region  |
-| instance_ids | no | | | ec2 instance id's, required when setting state to absent |
+| ec2_region |  yes |   || The AWS region to use. Must be specified if ec2_url is not used. If not specified then the value of the EC2_REGION environment variable, if any, is used. See http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region  |
 
 
 Ansible modules

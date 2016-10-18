@@ -24,28 +24,28 @@
 
 - name: Add new instance to host group (private ip)
   add_host: hostname="{{ item.1.private_ip }}" groupname=ec2_launched ec2_id="{{ item.1.id }}"
-  when: item.1.public_ip is undefined
+  when: item.1.public_ip is undefined and item.0.count is not 0
   with_subelements:
    - "{{ ec2.results }}"
    - instances
 
 - name: Add new instance to host group (public ip)
-  add_host: hostname="{{ item.1.public_ip }}" groupname=ec2_launched_public_ip ec2_id="{{ item.1.id }}"
-  when: item.1.public_ip is defined
+  add_host: hostname="{{ item.1.public_ip }}" groupname=ec2_launched ec2_id="{{ item.1.id }}"
+  when: item.1.public_ip is defined and item.0.count is not 0
   with_subelements:
    - "{{ ec2.results }}"
    - instances
 
 - name: Wait for public SSH to come up
   wait_for: host="{{ item.1.public_ip }}" port=22 delay=90 timeout=320 state=started
-  when: item.1.public_ip is defined
+  when: item.1.public_ip is defined and item.0.count is not 0
   with_subelements:
    - "{{ ec2.results }}"
    - instances
 
 - name: Wait for SSH to come up
   wait_for: host="{{ item.1.private_ip }}" port=22 delay=90 timeout=320 state=started
-  when: item.1.public_ip is undefined
+  when: item.1.public_ip is undefined and item.0.count is not 0
   with_subelements:
    - "{{ ec2.results }}"
    - instances
