@@ -1,0 +1,30 @@
+---
+# tasks file for aws-ec2-provisioning/
+- include: find-ami.yml
+
+- name: "{{ ACTION }} instances"
+  ec2:
+    assign_public_ip: "{{ item.ec2_assign_public_ip | default('no') }}"
+    ebs_optimized: "{{ item.ec2_ebs_optimized | default(false) }}"
+    group_id: "{{ item.ec2_sg_id }}"
+    instance_type: "{{ item.ec2_instance_type | default('t2.micro') }}"
+    instance_profile_name:  "{{ item.ec2_instance_profile_name | default ('')}}"
+    user_data: "{{ item.ec2_user_data | default (omit) }}"
+    key_name: "{{ item.ec2_key_name }}"
+    monitoring: "{{ item.ec2_monitoring | default('yes') }}"
+    region: "{{ item.ec2_region }}"
+    vpc_subnet_id: "{{ item.ec2_vpc_subnet_id }}"
+    instance_tags: "{{ item.aws_resource_tags }}"
+    count_tag: "{{ item.aws_resource_tags }}"
+    exact_count: "{{ item.count | default(1) }}"
+    volumes: "{{ item.ec2_volumes | default(omit) }}"
+    image: '{{ amis[item.ec2_find_ami_name | default("AMI was not found.")] | default(item.ec2_base_image)  }}'
+  with_items: "{{ instances }}"
+  register: ec2
+
+- name: set fact ec2_ami_instance_ids
+  set_fact: ec2_ami_instance_ids="{{ ec2_ami_instance_ids | default("") }} + {{ item.1.id }}"
+  when: ec2 is defined and not ansible_check_mode
+  with_subelements:
+   - "{{ ec2.results }}"
+   - tagged_instances

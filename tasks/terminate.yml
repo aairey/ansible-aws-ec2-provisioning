@@ -1,9 +1,16 @@
 ---
+- name: Gather facts for instances with specific tags
+  ec2_remote_facts:
+    filters:
+      "tag:{{ item.1.key }}": "{{ item.1.value }}"
+  with_subelements:
+    - "{{ instances }}"
+    - aws_resource_tags
+
 - name: terminate instances
   ec2:
-    instance_tags: "{{ item.aws_resource_tags | default(omit) }}"
-    state: "{{ item.state | default('absent') }}"
+    instance_ids: "{{ instance_ids  }}"
+    state: 'absent'
     region: "{{ item.ec2_region }}"
-  with_items: "{{ instances }}"
   register: ec2
 

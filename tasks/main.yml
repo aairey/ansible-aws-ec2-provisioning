@@ -3,9 +3,12 @@
 - fail: msg="The minimum Ansible version required to run is 2.0.1. To upgrade run 'sudo pip install --upgrade ansible'."
   when: ansible_version.major|int != 2 and ansible_version.minor|int < 0 and ansible_version.revision|int < 1
 
-- debug: msg="print {{ instances }}" verbosity=3
+- include: tasks/recreate.yml
+  when: ACTION == 'recreate'
 
-- include: tasks/create.yml
-  tags:
-    - provision
+- include: tasks/deploy.yml
+
+- include: tasks/add_variables.yml
+  when: ACTION == 'provision'
+
 

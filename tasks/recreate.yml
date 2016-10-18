@@ -1,0 +1,23 @@
+---
+# tasks file for recreating instances
+- include: tasks/find-ami.yml
+
+- name: "Destroy instances"
+  ec2:
+    region: "{{ item.ec2_region }}"
+    count_tag: "{{ item.aws_resource_tags }}"
+    image: '{{ amis[item.ec2_find_ami_name | default("AMI was not found.")] | default(item.ec2_base_image)  }}'
+    exact_count: "0"
+  with_items: "{{ instances }}"
+  register: ec2
+
+- name: set fact ec2_ami_instance_ids
+  set_fact: ec2_ami_instance_ids="{{ ec2_ami_instance_ids }} + {{ item.1.id }}"
+  when: ec2 is defined and not ansible_check_mode
+  with_subelements:
+   - "{{ ec2.results }}"
+   - tagged_instances
+
+- name: "Set variable for recreation"
+  set_fact:
+    ACTION: 'provision'
